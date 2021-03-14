@@ -73,7 +73,9 @@ void append_cstring_to_new_string() {
     ss_string_append_cstring(s, "asdf");
 
     ss_assert_msg(s->len == 5, "len is %li", s->len);
-    ss_assert(strcmp(s->str, "asdf") == 0);
+    ss_assert_msg(strncmp(s->str, "asdf", 4) == 0,
+        "value is '%s'; strcmp: %i", s->str
+    );
 
     ss_string_free(s);
 }
