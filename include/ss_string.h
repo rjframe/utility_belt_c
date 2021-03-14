@@ -64,6 +64,24 @@ void ss_string_clear(struct ss_string *s);
 // On failure to allocate, returns false and leaves dest unchanged.
 bool ss_string_append_cstring(struct ss_string *dest, const char *src);
 
+// Append the provided char data to an ss_string.
+//
+// The input data dies not need to be null-terminated.
+//
+// `len` must be the number of elements to insert and must not overflow the
+// input array.
+//
+// Returns:
+//
+// Returns true on success.
+//
+// If either dest or src are null or invalid or if src is an empty string, does
+// nothing and returns false.
+//
+// On failure to allocate, returns false and leaves dest unchanged.
+bool ss_string_append_data(struct ss_string *dest, const char *src, size_t len);
+
+
 // Append the given char to the string.
 //
 // Returns:

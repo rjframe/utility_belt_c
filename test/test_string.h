@@ -78,6 +78,18 @@ void append_cstring_to_new_string() {
     ss_string_free(s);
 }
 
+void append_data() {
+    struct ss_string *s = ss_string_create_from_cstring("asdf");
+    const char *data = "abc";
+
+    ss_string_append_data(s, data, 3);
+
+    ss_assert_msg(s->len == 8, "len is %li", s->len);
+    ss_assert(strcmp(s->str, "asdfabc") == 0);
+
+    ss_string_free(s);
+}
+
 void append_char() {
     struct ss_string *s = ss_string_create_from_cstring("a");
     ss_string_append_char(s, 'b');

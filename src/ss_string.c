@@ -84,6 +84,7 @@ void ss_string_clear(struct ss_string *s) {
     s->len = 0;
 }
 
+// TODO: use ss_string_append_data for this.
 bool ss_string_append_cstring(struct ss_string *dest, const char *src) {
     if (dest == NULL || src == NULL || *src == '\0') {
         return false;
@@ -110,6 +111,42 @@ bool ss_string_append_cstring(struct ss_string *dest, const char *src) {
 
     memcpy(dest->str + dest->len - 1, src, src_len);
     dest->len = new_len;
+
+    ss_assert(dest->str[dest->len-1] == '\0');
+
+    return true;
+}
+
+bool ss_string_append_data(struct ss_string *dest, const char *src, size_t len)
+{
+    // TODO: We should only append a null-terminator if the data appended
+    // doesn't already have one.
+
+    if (dest == NULL || src == NULL || *src == '\0') {
+        return false;
+    }
+
+    // Adjust for empty (unallocated) strings - count the virtual terminator.
+    if (dest->len == 0) { dest->len = 1; }
+
+    size_t new_len = dest->len + len;
+
+    if (new_len > dest->capacity) {
+        char *new_str = (char*) realloc(
+            dest->str,
+            next_pow_of_two(new_len * 2)
+        );
+        if (new_str == NULL) {
+            return false;
+        } else {
+            dest->str = new_str;
+            dest->capacity = new_len;
+        }
+    }
+
+    memcpy(dest->str + dest->len - 1, src, len);
+    dest->len = new_len;
+    dest->str[new_len - 1] = '\0';
 
     ss_assert(dest->str[dest->len-1] == '\0');
 

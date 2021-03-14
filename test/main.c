@@ -21,6 +21,7 @@ static void ss_string_tests() {
     run(clearing_string_leaves_buffer_valid);
     run(append_cstring);
     run(append_cstring_to_new_string);
+    run(append_data);
     run(append_char);
     run(append_char_to_new_string);
     run(append_char_to_empty_string_with_one_null);
