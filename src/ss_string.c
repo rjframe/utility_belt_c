@@ -111,6 +111,7 @@ bool ss_string_append_cstring(struct ss_string *dest, const char *src) {
 
     memcpy(dest->str + dest->len - 1, src, src_len);
     dest->len = new_len;
+    dest->str[new_len-1] = '\0';
 
     ss_assert(dest->str[dest->len-1] == '\0');
 
