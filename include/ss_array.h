@@ -51,7 +51,12 @@ T *ss_array_##LBL##_partition(                                              \
 );                                                                          \
 size_t ss_array_##LBL##_len(struct ss_array_##LBL *array);                  \
 T *ss_array_##LBL##_get(struct ss_array_##LBL *array, size_t pos);          \
-const void* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);             \
+const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);                \
+/* Point `out` to the array's internal data and free all other memory       \
+   associated with the array (give up ownership of the data) and return     \
+   the array's length.                                                      \
+*/                                                                          \
+size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL *array, T **out);    \
 bool ss_array_##LBL##_is_empty(struct ss_array_##LBL *array);
 
 
@@ -220,9 +225,17 @@ T *ss_array_##LBL##_get(struct ss_array_##LBL *array, size_t pos) {            \
     return &array->data[pos];                                                  \
 }                                                                              \
                                                                                \
-const void* ss_array_##LBL##_ptr(struct ss_array_##LBL *array) {               \
+const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array) {                  \
     if (array == NULL) return NULL;                                            \
     return array->data;                                                        \
+}                                                                              \
+                                                                               \
+size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL *array, T **out) {      \
+    if (array == NULL) return NULL;                                            \
+    size_t len = array->len;                                                   \
+    *out = array->data;                                                        \
+    free(array);                                                               \
+    return len;                                                                \
 }                                                                              \
                                                                                \
 bool ss_array_##LBL##_is_empty(struct ss_array_##LBL *array) {                 \
