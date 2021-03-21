@@ -80,7 +80,7 @@ void append_cstring_to_new_string() {
     ss_string_free(s);
 }
 
-void append_data() {
+void append_data_to_string() {
     struct ss_string *s = ss_string_create_from_cstring("asdf");
     const char *data = "abc";
 
@@ -92,7 +92,7 @@ void append_data() {
     ss_string_free(s);
 }
 
-void append_char() {
+void append_char_to_string() {
     struct ss_string *s = ss_string_create_from_cstring("a");
     ss_string_append_char(s, 'b');
 
