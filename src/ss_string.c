@@ -48,6 +48,7 @@ struct ss_string *ss_string_create_with_size(size_t sz) {
 
         if (s->str == NULL) {
             free(s);
+            s = NULL;
             return NULL;
         }
 
@@ -71,11 +72,12 @@ struct ss_string *ss_string_create_from_cstring(const char *s) {
     return str;
 }
 
-void ss_string_free(struct ss_string *s) {
-    if (s == NULL) return;
-    free(s->str);
-    s->str = NULL;
-    free(s);
+void ss_string_free(struct ss_string **s) {
+    if (s == NULL || *s == NULL) return;
+    free((*s)->str);
+    (*s)->str = NULL;
+    free(*s);
+    *s = NULL;
 }
 
 void ss_string_clear(struct ss_string *s) {

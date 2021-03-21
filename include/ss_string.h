@@ -42,10 +42,7 @@ struct ss_string *ss_string_create_with_size(size_t sz);
 struct ss_string *ss_string_create_from_cstring(const char *s);
 
 // Free the provided string.
-//
-// The pointer value itself is unchanged; it will point to the same (now
-// invalid) location.
-void ss_string_free(struct ss_string *s);
+void ss_string_free(struct ss_string **s);
 
 // Clear the string's data, but leave the underlying memory buffer unchanged.
 //

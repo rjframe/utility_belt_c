@@ -21,7 +21,7 @@
 #define DEFINE_ARRAY2(T, LBL)                                               \
 struct ss_array_##LBL;                                                      \
 struct ss_array_##LBL *ss_array_##LBL_create();                             \
-void ss_array_##LBL##_free(struct ss_array_##LBL *array);                   \
+void ss_array_##LBL##_free(struct ss_array_##LBL **array);                  \
 struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems); \
 struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len);   \
 /* Clear the array's data without invalidating the buffer. */               \
@@ -56,7 +56,7 @@ const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);                \
    associated with the array (give up ownership of the data) and return     \
    the array's length.                                                      \
 */                                                                          \
-size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL *array, T **out);    \
+size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL **array, T **out);   \
 bool ss_array_##LBL##_is_empty(struct ss_array_##LBL *array);
 
 
@@ -84,10 +84,12 @@ struct ss_array_##LBL *ss_array_##LBL##_create() {                             \
     return array;                                                              \
 }                                                                              \
                                                                                \
-void ss_array_##LBL##_free(struct ss_array_##LBL *array) {                     \
-    if (array == NULL) return;                                                 \
-    free(array->data);                                                         \
-    free(array);                                                               \
+void ss_array_##LBL##_free(struct ss_array_##LBL **array) {                    \
+    if (array == NULL || *array == NULL) return;                               \
+    free((*array)->data);                                                      \
+    (*array)->data = NULL;                                                     \
+    free(*array);                                                              \
+    *array = NULL;                                                             \
 }                                                                              \
                                                                                \
 struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems) {   \
@@ -97,6 +99,7 @@ struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems) {   \
     array->data = (T*) malloc(num_elems * sizeof(T));                          \
     if (array->data == NULL) {                                                 \
         free(array);                                                           \
+        array = NULL;                                                          \
         return NULL;                                                           \
     }                                                                          \
     array->capacity = num_elems * sizeof(T);                                   \
@@ -111,7 +114,7 @@ struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len) {     \
     size_t len_bytes = len * sizeof(T);                                        \
     T *buf = malloc(len_bytes);                                                \
     if (buf == NULL) {                                                         \
-        ss_array_##LBL##_free(array);                                          \
+        ss_array_##LBL##_free(&array);                                         \
         return NULL;                                                           \
     }                                                                          \
                                                                                \
@@ -230,11 +233,13 @@ const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array) {                  \
     return array->data;                                                        \
 }                                                                              \
                                                                                \
-size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL *array, T **out) {      \
-    if (array == NULL) return NULL;                                            \
-    size_t len = array->len;                                                   \
-    *out = array->data;                                                        \
-    free(array);                                                               \
+size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL **array, T **out) {     \
+    if (array == NULL || *out != NULL) return 0;                               \
+    size_t len = (*array)->len;                                                \
+    *out = (*array)->data;                                                     \
+    free(*array);                                                              \
+    *array = NULL;                                                             \
+                                                                               \
     return len;                                                                \
 }                                                                              \
                                                                                \

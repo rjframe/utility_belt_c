@@ -24,7 +24,7 @@ void default_string_is_empty() {
     ss_assert(s != NULL && s->str == NULL);
     ss_assert(ss_string_is_empty(s) && s->len == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void create_empty_string_with_set_capacity() {
@@ -32,7 +32,7 @@ void create_empty_string_with_set_capacity() {
     ss_assert(s->len == 0);
     ss_assert(s->capacity == 8);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void create_string_from_cstring() {
@@ -40,7 +40,7 @@ void create_string_from_cstring() {
     ss_assert(s->len == 12);
     ss_assert(strcmp(s->str, "test string") == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void clearing_string_leaves_buffer_valid() {
@@ -55,7 +55,7 @@ void clearing_string_leaves_buffer_valid() {
     ss_assert(s->capacity = cap);
     ss_assert(strcmp(s->str, "\0\0\0\0\0\0\0\0\0\0\0\0") == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_cstring() {
@@ -65,7 +65,7 @@ void append_cstring() {
     ss_assert_msg(s->len == 5, "len is %li", s->len);
     ss_assert(strcmp(s->str, "abcd") == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_cstring_to_new_string() {
@@ -77,7 +77,7 @@ void append_cstring_to_new_string() {
         "value is '%s'; strcmp: %i", s->str
     );
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_data_to_string() {
@@ -89,7 +89,7 @@ void append_data_to_string() {
     ss_assert_msg(s->len == 8, "len is %li", s->len);
     ss_assert(strcmp(s->str, "asdfabc") == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_char_to_string() {
@@ -99,7 +99,7 @@ void append_char_to_string() {
     ss_assert_msg(s->len == 3, "len is %li", s->len);
     ss_assert_msg(strcmp(s->str, "ab") == 0, "str is '%s'", s->str);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_char_to_new_string() {
@@ -109,7 +109,7 @@ void append_char_to_new_string() {
     ss_assert_msg(s->len == 2, "len is %li", s->len);
     ss_assert_msg(strcmp(s->str, "a") == 0, "str is '%s'", s->str);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_char_to_empty_string_with_one_null() {
@@ -122,7 +122,7 @@ void append_char_to_empty_string_with_one_null() {
     ss_string_append_char(s, '\0');
     ss_assert(s->len == 2);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void append_string() {
@@ -133,8 +133,8 @@ void append_string() {
     ss_assert_msg(s1->len == 5, "len is %li", s1->len);
     ss_assert_msg(strcmp(s1->str, "abcd") == 0, "str is '%s'", s1->str);
 
-    ss_string_free(s1);
-    ss_string_free(s2);
+    ss_string_free(&s1);
+    ss_string_free(&s2);
 }
 
 void append_string_to_new_string() {
@@ -146,8 +146,8 @@ void append_string_to_new_string() {
     ss_assert_msg(s1->len == 3, "len is %li", s1->len);
     ss_assert(strcmp(s1->str, s2->str) == 0);
 
-    ss_string_free(s1);
-    ss_string_free(s2);
+    ss_string_free(&s1);
+    ss_string_free(&s2);
 }
 
 void get_const_reference_to_inner_cstring() {
@@ -155,7 +155,7 @@ void get_const_reference_to_inner_cstring() {
 
     ss_assert(strcmp(ss_string_as_cstring(s), "abc") == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void get_string_length() {
@@ -165,7 +165,7 @@ void get_string_length() {
     ss_string_clear(s);
     ss_assert(ss_string_len(s) == 0);
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void check_whether_string_is_empty() {
@@ -177,7 +177,7 @@ void check_whether_string_is_empty() {
     ss_string_append_cstring(s, "a");
     ss_assert(! ss_string_is_empty(s));
 
-    ss_string_free(s);
+    ss_string_free(&s);
 }
 
 void compare_strings() {
@@ -188,9 +188,9 @@ void compare_strings() {
     ss_assert(ss_string_cmp(s1, s2) == 0);
     ss_assert(ss_string_cmp(s1, s3) != 0);
 
-    ss_string_free(s1);
-    ss_string_free(s2);
-    ss_string_free(s3);
+    ss_string_free(&s1);
+    ss_string_free(&s2);
+    ss_string_free(&s3);
 }
 
 #endif

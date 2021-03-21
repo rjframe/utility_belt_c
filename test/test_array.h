@@ -18,8 +18,8 @@ void default_array_is_empty() {
     ss_assert(ss_array_int_is_empty(int_array) && int_array->len == 0);
     ss_assert(ss_array_s_is_empty(s_array) && s_array->len == 0);
 
-    ss_array_int_free(int_array);
-    ss_array_s_free(s_array);
+    ss_array_int_free(&int_array);
+    ss_array_s_free(&s_array);
 }
 
 void create_empty_array_with_set_capacity() {
@@ -32,8 +32,8 @@ void create_empty_array_with_set_capacity() {
     ss_assert(s_array->capacity == 4 * sizeof(S));
     ss_assert(int_array->capacity == 4 * sizeof(int));
 
-    ss_array_int_free(int_array);
-    ss_array_s_free(s_array);
+    ss_array_int_free(&int_array);
+    ss_array_s_free(&s_array);
 }
 
 void create_array_from_data() {
@@ -60,6 +60,8 @@ void create_array_from_data() {
 
     free(int_array);
     free(s_array);
+    int_array = NULL;
+    s_array = NULL;
 }
 
 void clearing_array_leaves_buffer_valid() {
@@ -74,7 +76,7 @@ void clearing_array_leaves_buffer_valid() {
     ss_assert(array->len == 0);
     ss_assert(array->capacity == cap);
 
-    free(array);
+    ss_array_int_free(&array);
 }
 
 void append_data_to_array() {
@@ -97,7 +99,7 @@ void append_data_to_array() {
     ss_assert(array->data[5] == 6);
     ss_assert(array->data[6] == 7);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void append_data_to_new_array() {
@@ -114,7 +116,7 @@ void append_data_to_new_array() {
     ss_assert(array->data[1] == 2);
     ss_assert(array->data[2] == 3);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void append_array() {
@@ -133,8 +135,8 @@ void append_array() {
     ss_assert(first_array->data[4] == 5);
     ss_assert(first_array->data[5] == 6);
 
-    ss_array_int_free(first_array);
-    ss_array_int_free(second_array);
+    ss_array_int_free(&first_array);
+    ss_array_int_free(&second_array);
 }
 
 void append_array_to_new_array() {
@@ -149,8 +151,8 @@ void append_array_to_new_array() {
     ss_assert(first_array->data[1] == 5);
     ss_assert(first_array->data[2] == 6);
 
-    ss_array_int_free(first_array);
-    ss_array_int_free(second_array);
+    ss_array_int_free(&first_array);
+    ss_array_int_free(&second_array);
 }
 
 void array_swap() {
@@ -175,7 +177,7 @@ void insert_element_into_array() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void insert_element_at_beginning() {
@@ -191,7 +193,7 @@ void insert_element_at_beginning() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void insert_element_at_end() {
@@ -207,7 +209,7 @@ void insert_element_at_end() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 bool less_eq_five(int *i) { return *i <= 5; }
@@ -225,6 +227,8 @@ void array_partition_odd_elems() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 5);
     }
+
+    ss_array_int_free(&array);
 }
 
 void array_partition_even_elems() {
@@ -240,6 +244,8 @@ void array_partition_even_elems() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 5);
     }
+
+    ss_array_int_free(&array);
 }
 
 void array_partition_no_moves() {
@@ -255,6 +261,8 @@ void array_partition_no_moves() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 5);
     }
+
+    ss_array_int_free(&array);
 }
 
 void array_partition_move_all() {
@@ -270,6 +278,8 @@ void array_partition_move_all() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 5);
     }
+
+    ss_array_int_free(&array);
 }
 
 void array_partition_all_match() {
@@ -285,6 +295,8 @@ void array_partition_all_match() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 5);
     }
+
+    ss_array_int_free(&array);
 }
 
 bool less_eq_one(int *i) { return *i <= 1; }
@@ -302,6 +314,8 @@ void array_partition_pivot_is_first() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 1);
     }
+
+    ss_array_int_free(&array);
 }
 
 bool less_eq_six(int *i) { return *i <= 6; }
@@ -319,6 +333,8 @@ void array_partition_pivot_is_last() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 6);
     }
+
+    ss_array_int_free(&array);
 }
 
 bool less_eq_eleven(int *i) { return *i <= 11; }
@@ -336,6 +352,8 @@ void array_partition_pivot_out_of_range() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 11);
     }
+
+    ss_array_int_free(&array);
 }
 
 bool less_eq_nine(int *i) { return *i <= 9; }
@@ -353,6 +371,8 @@ void array_partition_pivot_is_highest() {
     for (i += 1; i < 9; ++i) {
         ss_assert(array->data[i] > 9);
     }
+
+    ss_array_int_free(&array);
 }
 
 void get_reference_to_element() {
@@ -370,7 +390,7 @@ void get_reference_to_element() {
     elem = ss_array_int_get(array, 4);
     ss_assert(elem == NULL);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void get_array_length() {
@@ -382,7 +402,7 @@ void get_array_length() {
 
     ss_assert(ss_array_int_len(array) == 4);
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 void check_whether_array_is_empty() {
@@ -394,7 +414,7 @@ void check_whether_array_is_empty() {
 
     ss_assert(! ss_array_int_is_empty(array));
 
-    ss_array_int_free(array);
+    ss_array_int_free(&array);
 }
 
 #endif
