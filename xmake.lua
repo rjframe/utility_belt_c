@@ -39,6 +39,6 @@ target("test")
         -- Linker error: "-fsanitize=undefined"
     )
     add_cflags("-g", "-grecord-gcc-switches")
-    add_defines("SS_DEBUG", "SS_LIB_RUN_TESTS")
+    add_defines("SS_DEBUG", "SS_LIB_RUN_TESTS", "USE_SS_LIB_ASSERT")
     add_includedirs("test", "include")
     add_files("src/*.c", "test/*.c")
