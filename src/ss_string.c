@@ -42,16 +42,17 @@ struct ss_string *ss_string_create_with_size(size_t sz) {
     struct ss_string *s = ss_string_create();
     if (s == NULL) return NULL;
 
-    s->str = sz > 0
-        ? (char*) calloc(next_pow_of_two(sz), sizeof(char))
-        : (char*) malloc(next_pow_of_two(sz) * sizeof(char));
+    if (sz > 0) {
+        size_t cap = next_pow_of_two(sz);
+        s->str = (char*) calloc(cap, sizeof(char));
 
-    if (s->str == NULL) {
-        free(s);
-        return NULL;
+        if (s->str == NULL) {
+            free(s);
+            return NULL;
+        }
+
+        s->capacity = cap;
     }
-
-    s->capacity = sz;
 
     return s;
 }

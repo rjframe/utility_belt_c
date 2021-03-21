@@ -14,6 +14,8 @@
  *    architectures without a byte type).
  */
 
+// TODO: Split function.
+
 #ifndef SS_LIB_STRING_H
 #define SS_LIB_STRING_H
 
@@ -30,6 +32,8 @@ struct ss_string *ss_string_create();
 // Create an empty string with the specified buffer size, in number of chars.
 //
 // The returned pointer will be NULL on failure to allocate.
+//
+// If sz is 0, behaves like [ss_string_create].
 struct ss_string *ss_string_create_with_size(size_t sz);
 
 // Create a string from the provided C string.
