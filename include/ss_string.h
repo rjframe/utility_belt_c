@@ -81,7 +81,6 @@ bool ss_string_append_cstring(struct ss_string *dest, const char *src);
 // On failure to allocate, returns false and leaves dest unchanged.
 bool ss_string_append_data(struct ss_string *dest, const char *src, size_t len);
 
-
 // Append the given char to the string.
 //
 // Returns:

@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "ss_string.h"
+#include "ss_math.h"
 
 #ifdef USE_SS_LIB_ASSERT
     #include "ss_assert.h"
@@ -25,7 +26,6 @@ struct ss_string {
     size_t capacity;
 };
 
-static uint64_t next_pow_of_two(uint64_t num);
 
 struct ss_string *ss_string_create() {
     struct ss_string *s = (struct ss_string*) malloc(sizeof(struct ss_string));
@@ -239,18 +239,3 @@ int ss_string_cmp(const struct ss_string *s1, const struct ss_string *s2) {
         : strcmp(s1->str, s2->str);
 }
 
-// If num is a power of two, returns num. Otherwise returns the next-highest
-// power of two.
-static uint64_t next_pow_of_two(uint64_t num) {
-    uint64_t n = num > 0 ? num - 1 : 0;
-
-    n |= n >> 1;
-    n |= n >> 2;
-    n |= n >> 4;
-    n |= n >> 8;
-    n |= n >> 16;
-    n |= n >> 32;
-    n += 1;
-
-    return n;
-}
