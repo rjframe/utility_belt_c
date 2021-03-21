@@ -16,6 +16,45 @@
 #endif
 
 
+#define DEFINE_ARRAY(T) DEFINE_ARRAY2(T, T)
+
+#define DEFINE_ARRAY2(T, LBL)                                               \
+struct ss_array_##LBL;                                                      \
+struct ss_array_##LBL *ss_array_##LBL_create();                             \
+void ss_array_##LBL##_free(struct ss_array_##LBL *array);                   \
+struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems); \
+struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len);   \
+/* Clear the array's data without invalidating the buffer. */               \
+void ss_array_##LBL##_clear(struct ss_array_##LBL *array);                  \
+bool ss_array_##LBL##_append_data(                                          \
+    struct ss_array_##LBL *array,                                           \
+    T *data,                                                                \
+    size_t num_elems                                                        \
+);                                                                          \
+bool ss_array_##LBL##_append(                                               \
+    struct ss_array_##LBL *array,                                           \
+    struct ss_array_##LBL *src                                              \
+);                                                                          \
+bool ss_array_##LBL##_insert(                                               \
+    struct ss_array_##LBL *array,                                           \
+    T *elem,                                                                \
+    size_t pos                                                              \
+);                                                                          \
+/* Partition the array so that elements for which the supplied function     \
+   returns `true` precede elements for which it returns `false`.            \
+                                                                            \
+   Returns a pointer to the first element of the second group.              \
+*/                                                                          \
+T *ss_array_##LBL##_partition(                                              \
+    struct ss_array_##LBL *array,                                           \
+    bool (*f)(T* elem)                                                      \
+);                                                                          \
+size_t ss_array_##LBL##_len(struct ss_array_##LBL *array);                  \
+T *ss_array_##LBL##_get(struct ss_array_##LBL *array, size_t pos);          \
+const void* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);             \
+bool ss_array_##LBL##_is_empty(struct ss_array_##LBL *array);
+
+
 #define GENERATE_ARRAY(T) GENERATE_ARRAY2(T, T)
 
 // Use label for cases when type spans multiple words, is a pointer, etc.
@@ -78,7 +117,6 @@ struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len) {     \
     return array;                                                              \
 }                                                                              \
                                                                                \
-/* Clear the array's data without invalidating the buffer. */                  \
 void ss_array_##LBL##_clear(struct ss_array_##LBL *array) {                    \
     if (array == NULL) return;                                                 \
                                                                                \
@@ -142,11 +180,6 @@ bool ss_array_##LBL##_insert(struct ss_array_##LBL *array, T *elem, size_t pos)\
     return true;                                                               \
 }                                                                              \
                                                                                \
-/* Partition the array so that elements for which the supplied function        \
-   returns `true` precedes elements for which it returns `false`.              \
-                                                                               \
-   Returns a pointer to the first element of the second group.                 \
-*/                                                                             \
 T *ss_array_##LBL##_partition(                                                 \
     struct ss_array_##LBL *array,                                              \
     bool (*f)(T* elem)                                                         \
