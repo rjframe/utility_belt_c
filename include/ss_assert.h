@@ -1,6 +1,16 @@
 #ifndef SS_LIB_ASSERT_H
 #define SS_LIB_ASSERT_H
 
+/* Custom assertion functions.
+ *
+ * Backtraces are only supported with the GCC compiler.
+ *
+ * Recognized macro definitions:
+ *
+ * - SS_FULL_BACKTRACE: provide a full backtrace rather than the default short
+ *   backtrace.
+ */
+
 #include <stdbool.h>
 #include <stdlib.h>
 

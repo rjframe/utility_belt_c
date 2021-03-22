@@ -1,4 +1,5 @@
 add_rules("mode.debug", "mode.release")
+-- TODO: Handle modes properly
 
 target("ss_utils")
     set_kind("static")
@@ -15,7 +16,8 @@ target("ss_utils")
     add_cflags("-g", "-grecord-gcc-switches")
     -- TODO: Release flags: -O2
     -- TODO: SS_DEBUG only on debug builds
-    add_defines("USE_SS_LIB_ASSERT", "SS_DEBUG")
+    add_defines("DEBUG", "USE_SS_LIB_ASSERT", "SS_DEBUG")
+    add_ldflags("-rdynamic")
     add_includedirs("include", {public = true})
     add_headerfiles("include/*.h")
     add_files("src/*.c")
@@ -39,6 +41,7 @@ target("test")
         -- Linker error: "-fsanitize=undefined"
     )
     add_cflags("-g", "-grecord-gcc-switches")
-    add_defines("SS_DEBUG", "SS_LIB_RUN_TESTS", "USE_SS_LIB_ASSERT")
+    add_defines("DEBUG", "SS_DEBUG", "SS_LIB_RUN_TESTS", "USE_SS_LIB_ASSERT")
+    add_ldflags("-rdynamic")
     add_includedirs("test", "include")
     add_files("src/*.c", "test/*.c")
