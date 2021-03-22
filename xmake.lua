@@ -1,9 +1,7 @@
 add_rules("mode.debug", "mode.release")
--- TODO: Handle modes properly
 
 target("ss_utils")
     set_kind("static")
-    -- TODO - add release flags
     add_languages("c17")
     set_warnings("allextra")
     add_cflags("-Wpedantic", "-Werror=return-type",
@@ -12,11 +10,12 @@ target("ss_utils")
         "-Wshadow", "-Wcast-align", "-Wwrite-strings", "-Wcast-qual",
         "-Wconversion"
     )
-    -- TODO - these are debug flags
-    add_cflags("-g", "-grecord-gcc-switches")
-    -- TODO: Release flags: -O2
-    -- TODO: SS_DEBUG only on debug builds
-    add_defines("DEBUG", "USE_SS_LIB_ASSERT", "SS_DEBUG")
+    if is_mode("debug") then
+        add_cflags("-g", "-grecord-gcc-switches")
+    else
+        add_cflags("-O2")
+    end
+    add_defines("USE_SS_LIB_ASSERT")
     add_ldflags("-rdynamic")
     add_includedirs("include", {public = true})
     add_headerfiles("include/*.h")
