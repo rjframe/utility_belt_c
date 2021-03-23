@@ -4,7 +4,7 @@
 #include "ss_array.h"
 #include "ss_assert.h"
 
-DEFINE_ARRAY(int)
+DECLARE_ARRAY(int)
 GENERATE_ARRAY(int)
 
 typedef struct S { int a; int b; } S;

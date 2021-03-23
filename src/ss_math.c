@@ -1,9 +1,12 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 #include <stdint.h>
 
 #include "ss_math.h"
 
-// If num is a power of two, returns num. Otherwise returns the next-highest
-// power of two.
 uint64_t next_pow_of_two(uint64_t num) {
     uint64_t n = num > 0 ? num - 1 : 0;
 

@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -16,7 +21,6 @@
     #define ss_assert_msg(EXPR, ...) assert(EXPR)
 #endif
 
-// A string type that manages its own memory and tracks its length.
 struct ss_string {
     // A valid C string
     char* str;
@@ -25,7 +29,6 @@ struct ss_string {
     // The size of the string buffer
     size_t capacity;
 };
-
 
 struct ss_string *ss_string_create() {
     struct ss_string *s = (struct ss_string*) malloc(sizeof(struct ss_string));

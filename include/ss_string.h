@@ -1,6 +1,14 @@
+#ifndef SS_LIB_STRING_H
+#define SS_LIB_STRING_H
+
+/* This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 /* Managed string type.
  *
- * When a new string is created, memory is allocated sized to the new string. On
+ * When a new string is created, allocated memory is sized to the new string. On
  * later resizes, extra capacity is allocated.
  *
  * This provides decent general-purpose behavior:
@@ -12,16 +20,18 @@
  *
  *  - Not fully compatible with multi-byte chars (only a problem on
  *    architectures without a byte type).
+ *
+ *  Requires:
+ *
+ *  ss_math.h
  */
 
-// TODO: Split function.
-
-#ifndef SS_LIB_STRING_H
-#define SS_LIB_STRING_H
+// TODO: Add a split function.
 
 #include <stdbool.h>
 #include <stddef.h>
 
+// A string type that manages its own memory and tracks its length.
 struct ss_string;
 
 // Create a new, empty string.
@@ -41,7 +51,7 @@ struct ss_string *ss_string_create_with_size(size_t sz);
 // The returned pointer will be NULL on failure to allocate.
 struct ss_string *ss_string_create_from_cstring(const char *s);
 
-// Free the provided string.
+// Free the provided string and set its pointer to NULL.
 void ss_string_free(struct ss_string **s);
 
 // Clear the string's data, but leave the underlying memory buffer unchanged.
@@ -120,8 +130,14 @@ size_t ss_string_len(const struct ss_string *s);
 // have a length of one and still be empty:
 //
 // ```
-// struct ss_string *s = ss_string_from_cstring("\0");
-// ss_assert(s->is_empty());
+// struct ss_string *s = ss_string_create();
+// ss_assert(ss_string_is_empty(s));
+// ss_assert(ss_string_len(s) == 0);
+// ss_string_free(&s);
+//
+// s = ss_string_from_cstring("");
+// ss_assert(ss_string_is_empty(s));
+// ss_assert(ss_string_len(s) == 1);
 // ```
 bool ss_string_is_empty(const struct ss_string *s);
 
