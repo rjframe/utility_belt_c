@@ -307,10 +307,19 @@ const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array) {                  \
 size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL **array, T **out) {     \
     if (array == NULL || *out != NULL) return 0;                               \
     size_t len = (*array)->len;                                                \
-    *out = (*array)->data;                                                     \
-    free(*array);                                                              \
-    *array = NULL;                                                             \
                                                                                \
+    T *buf = NULL;                                                             \
+    if (len > 0) {                                                             \
+        buf = (T*) realloc((*array)->data, sizeof(T) * len);                   \
+        if (buf == NULL) {                                                     \
+            /* Shrinking; should be impossible. */                             \
+            ss_assert(false);                                                  \
+        }                                                                      \
+    } else {                                                                   \
+        buf = (*array)->data;                                                  \
+    }                                                                          \
+                                                                               \
+    *out = buf;                                                                \
     return len;                                                                \
 }                                                                              \
                                                                                \
