@@ -63,7 +63,7 @@ void NOINLINE ss_do_assert_(
     const char *message,
     const char *file,
     size_t line,
-    bool abort_on_false,
+    int abort_on_false,
     const char *expr,
     ...
 ) {
