@@ -33,105 +33,107 @@
 
 #define DECLARE_ARRAY(T) DECLARE_ARRAY2(T, T)
 
-#define DECLARE_ARRAY2(T, LBL)                                              \
-struct ss_array_##LBL;                                                      \
-                                                                            \
-/* Create a new, empty array.                                               \
- *                                                                          \
- * Returns NULL on failure to allocate memory.                              \
- */                                                                         \
-struct ss_array_##LBL *ss_array_##LBL##_create();                           \
-                                                                            \
+#define DECLARE_ARRAY2(T, LBL)                                                 \
+struct ss_array_##LBL;                                                         \
+                                                                               \
+/* Create a new, empty array.                                                  \
+ *                                                                             \
+ * Returns NULL on failure to allocate memory.                                 \
+ */                                                                            \
+struct ss_array_##LBL *ss_array_##LBL##_create();                              \
+                                                                               \
 /* Free the provided array and set its pointer to NULL.                        \
  *                                                                             \
  * Calls a free function on each element of the array if one is provided.      \
  */                                                                            \
 void ss_array_##LBL##_free(struct ss_array_##LBL **array, void (*f)(T** elem));\
-                                                                            \
-/* Create a new array with the specified capacity.                          \
- * If `num_elems` is 0, behaves like [ss_array_##LBL##_create].             \
- */                                                                         \
-struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems); \
-                                                                            \
-/* Create an array from the provided pointer and length.                    \
- *                                                                          \
- * The data in the original array is copied to a new memory buffer.         \
- *                                                                          \
- * Returns NULL on failure to allocated memory.                             \
- */                                                                         \
-struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len);   \
-                                                                            \
-/* Clear the array's data without invalidating the buffer.                  \
- * The optimizer may optimize this call away.                               \
- */                                                                         \
-void ss_array_##LBL##_clear(struct ss_array_##LBL *array);                  \
-                                                                            \
-/* Append the provided data to an array.                                    \
- *                                                                          \
- * If `data` is NULL or `num_elems` is 0, does nothing and returns `false`. \
- */                                                                         \
-bool ss_array_##LBL##_append_data(                                          \
-    struct ss_array_##LBL *array,                                           \
-    T *data,                                                                \
-    size_t num_elems                                                        \
-);                                                                          \
-                                                                            \
-/* Append one array to another. The `src` array is left unchanged.          \
- *                                                                          \
- * If either array is invalid, does nothing and returns `false`.            \
- *                                                                          \
- * On failure to allocate, leaves `array` unchanged and returns `false`.    \
- */                                                                         \
-bool ss_array_##LBL##_append(                                               \
-    struct ss_array_##LBL *array,                                           \
-    struct ss_array_##LBL *src                                              \
-);                                                                          \
-                                                                            \
-/* Insert an element into the array at the specified position.              \
- *                                                                          \
- * If `pos` is outside the array bounds, does nothing and returns false.    \
- *                                                                          \
- * Returns `false` if unable to allocate memory.                            \
- */                                                                         \
-bool ss_array_##LBL##_insert(                                               \
-    struct ss_array_##LBL *array,                                           \
-    T *elem,                                                                \
-    size_t pos                                                              \
-);                                                                          \
-                                                                            \
-/* Partition the array so that elements for which the supplied function     \
- * returns `true` precede elements for which it returns `false`.            \
- *                                                                          \
- * Returns a pointer to the first element of the second group.              \
-*/                                                                          \
-T *ss_array_##LBL##_partition(                                              \
-    struct ss_array_##LBL *array,                                           \
-    bool (*f)(T* elem)                                                      \
-);                                                                          \
-                                                                            \
-/* Return the array's length. */                                            \
-size_t ss_array_##LBL##_len(struct ss_array_##LBL *array);                  \
-                                                                            \
-/* Get a reference to the element at the specified position.                \
- *                                                                          \
- * If `pos` is outside the array's bounds, returns NULL.                    \
- */                                                                         \
-T *ss_array_##LBL##_get(struct ss_array_##LBL *array, size_t pos);          \
-                                                                            \
-/* Get a constant reference to the underlying data. */                      \
-const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);                \
-                                                                            \
-/* Convert the array to its underlying C-style array.                       \
- *                                                                          \
- * Returns the data in `out`, frees all other memory associated with the    \
- * array, and returns the array's length.                                   \
- *                                                                          \
- * The pointer to the array will be set to NULL. Managing the data becomes  \
- * the caller's responsibility.                                             \
-*/                                                                          \
-size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL **array, T **out);   \
-                                                                            \
-/* Returns `true` if the array is empty; otherwise, returns `false`. */     \
+                                                                               \
+/* Create a new array with the specified capacity.                             \
+                                                                               \
+ * If `num_elems` is 0, behaves like [ss_array_##LBL##_create].                \
+ */                                                                            \
+struct ss_array_##LBL *ss_array_##LBL##_create_with_size(size_t num_elems);    \
+                                                                               \
+/* Create an array from the provided pointer and length.                       \
+ *                                                                             \
+ * The data in the original array is copied to a new memory buffer.            \
+ *                                                                             \
+ * Returns NULL on failure to allocated memory.                                \
+ */                                                                            \
+struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len);      \
+                                                                               \
+/* Clear the array's data without invalidating the buffer.                     \
+                                                                               \
+ * The optimizer may optimize this call away.                                  \
+ */                                                                            \
+void ss_array_##LBL##_clear(struct ss_array_##LBL *array);                     \
+                                                                               \
+/* Append the provided data to an array.                                       \
+ *                                                                             \
+ * If `data` is NULL or `num_elems` is 0, does nothing and returns `false`.    \
+ */                                                                            \
+bool ss_array_##LBL##_append_data(                                             \
+    struct ss_array_##LBL *array,                                              \
+    T *data,                                                                   \
+    size_t num_elems                                                           \
+);                                                                             \
+                                                                               \
+/* Append one array to another. The `src` array is left unchanged.             \
+ *                                                                             \
+ * If either array is invalid, does nothing and returns `false`.               \
+ *                                                                             \
+ * On failure to allocate, leaves `array` unchanged and returns `false`.       \
+ */                                                                            \
+bool ss_array_##LBL##_append(                                                  \
+    struct ss_array_##LBL *array,                                              \
+    struct ss_array_##LBL *src                                                 \
+);                                                                             \
+                                                                               \
+/* Insert an element into the array at the specified position.                 \
+ *                                                                             \
+ * If `pos` is outside the array bounds, does nothing and returns false.       \
+ *                                                                             \
+ * Returns `false` if unable to allocate memory.                               \
+ */                                                                            \
+bool ss_array_##LBL##_insert(                                                  \
+    struct ss_array_##LBL *array,                                              \
+    T *elem,                                                                   \
+    size_t pos                                                                 \
+);                                                                             \
+                                                                               \
+/* Partition the array so that elements for which the supplied function        \
+ * returns `true` precede elements for which it returns `false`.               \
+ *                                                                             \
+ * Returns a pointer to the first element of the second group.                 \
+*/                                                                             \
+T *ss_array_##LBL##_partition(                                                 \
+    struct ss_array_##LBL *array,                                              \
+    bool (*f)(T* elem)                                                         \
+);                                                                             \
+                                                                               \
+/* Return the array's length. */                                               \
+size_t ss_array_##LBL##_len(struct ss_array_##LBL *array);                     \
+                                                                               \
+/* Get a reference to the element at the specified position.                   \
+ *                                                                             \
+ * If `pos` is outside the array's bounds, returns NULL.                       \
+ */                                                                            \
+T *ss_array_##LBL##_get(struct ss_array_##LBL *array, size_t pos);             \
+                                                                               \
+/* Get a constant reference to the underlying data. */                         \
+const T* ss_array_##LBL##_ptr(struct ss_array_##LBL *array);                   \
+                                                                               \
+/* Convert the array to its underlying C-style array.                          \
+ *                                                                             \
+ * Returns the data in `out`, frees all other memory associated with the       \
+ * array, and returns the array's length.                                      \
+ *                                                                             \
+ * The pointer to the array will be set to NULL. Managing the data becomes     \
+ * the caller's responsibility.                                                \
+*/                                                                             \
+size_t ss_array_##LBL##_dissolve(struct ss_array_##LBL **array, T **out);      \
+                                                                               \
+/* Returns `true` if the array is empty; otherwise, returns `false`. */        \
 bool ss_array_##LBL##_is_empty(struct ss_array_##LBL *array);
 
 
