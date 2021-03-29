@@ -8,7 +8,11 @@ DECLARE_ARRAY(int)
 GENERATE_ARRAY(int)
 
 typedef struct S { int a; int b; } S;
+DECLARE_ARRAY2(S, s)
 GENERATE_ARRAY2(S, s)
+
+typedef struct S2 { int *buf; } S2;
+GENERATE_ARRAY2(S2, s2);
 
 void default_array_is_empty() {
     struct ss_array_int *int_array = ss_array_int_create();
@@ -18,8 +22,8 @@ void default_array_is_empty() {
     ss_assert(ss_array_int_is_empty(int_array) && int_array->len == 0);
     ss_assert(ss_array_s_is_empty(s_array) && s_array->len == 0);
 
-    ss_array_int_free(&int_array);
-    ss_array_s_free(&s_array);
+    ss_array_int_free(&int_array, NULL);
+    ss_array_s_free(&s_array, NULL);
 }
 
 void create_empty_array_with_set_capacity() {
@@ -32,8 +36,8 @@ void create_empty_array_with_set_capacity() {
     ss_assert(s_array->capacity == 4 * sizeof(S));
     ss_assert(int_array->capacity == 4 * sizeof(int));
 
-    ss_array_int_free(&int_array);
-    ss_array_s_free(&s_array);
+    ss_array_int_free(&int_array, NULL);
+    ss_array_s_free(&s_array, NULL);
 }
 
 void create_array_from_data() {
@@ -58,10 +62,8 @@ void create_array_from_data() {
     ss_assert(s_array->data[1].a == 2);
     ss_assert(s_array->data[1].b == 2);
 
-    free(int_array);
-    free(s_array);
-    int_array = NULL;
-    s_array = NULL;
+    ss_array_int_free(&int_array, NULL);
+    ss_array_s_free(&s_array, NULL);
 }
 
 void clearing_array_leaves_buffer_valid() {
@@ -76,7 +78,7 @@ void clearing_array_leaves_buffer_valid() {
     ss_assert(array->len == 0);
     ss_assert(array->capacity == cap);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void append_data_to_array() {
@@ -99,7 +101,7 @@ void append_data_to_array() {
     ss_assert(array->data[5] == 6);
     ss_assert(array->data[6] == 7);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void append_data_to_new_array() {
@@ -116,7 +118,7 @@ void append_data_to_new_array() {
     ss_assert(array->data[1] == 2);
     ss_assert(array->data[2] == 3);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void append_array() {
@@ -135,8 +137,8 @@ void append_array() {
     ss_assert(first_array->data[4] == 5);
     ss_assert(first_array->data[5] == 6);
 
-    ss_array_int_free(&first_array);
-    ss_array_int_free(&second_array);
+    ss_array_int_free(&first_array, NULL);
+    ss_array_int_free(&second_array, NULL);
 }
 
 void append_array_to_new_array() {
@@ -151,8 +153,8 @@ void append_array_to_new_array() {
     ss_assert(first_array->data[1] == 5);
     ss_assert(first_array->data[2] == 6);
 
-    ss_array_int_free(&first_array);
-    ss_array_int_free(&second_array);
+    ss_array_int_free(&first_array, NULL);
+    ss_array_int_free(&second_array, NULL);
 }
 
 void array_swap() {
@@ -177,7 +179,7 @@ void insert_element_into_array() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void insert_element_at_beginning() {
@@ -193,7 +195,7 @@ void insert_element_at_beginning() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void insert_element_at_end() {
@@ -209,7 +211,7 @@ void insert_element_at_end() {
     ss_assert(array->data[2] == 3);
     ss_assert(array->data[3] == 4);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 bool less_eq_five(int *i) { return *i <= 5; }
@@ -228,7 +230,7 @@ void array_partition_odd_elems() {
         ss_assert(array->data[i] > 5);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void array_partition_even_elems() {
@@ -245,7 +247,7 @@ void array_partition_even_elems() {
         ss_assert(array->data[i] > 5);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void array_partition_no_moves() {
@@ -262,7 +264,7 @@ void array_partition_no_moves() {
         ss_assert(array->data[i] > 5);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void array_partition_move_all() {
@@ -279,7 +281,7 @@ void array_partition_move_all() {
         ss_assert(array->data[i] > 5);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void array_partition_all_match() {
@@ -296,7 +298,7 @@ void array_partition_all_match() {
         ss_assert(array->data[i] > 5);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 bool less_eq_one(int *i) { return *i <= 1; }
@@ -315,7 +317,7 @@ void array_partition_pivot_is_first() {
         ss_assert(array->data[i] > 1);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 bool less_eq_six(int *i) { return *i <= 6; }
@@ -334,7 +336,7 @@ void array_partition_pivot_is_last() {
         ss_assert(array->data[i] > 6);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 bool less_eq_eleven(int *i) { return *i <= 11; }
@@ -353,7 +355,7 @@ void array_partition_pivot_out_of_range() {
         ss_assert(array->data[i] > 11);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 bool less_eq_nine(int *i) { return *i <= 9; }
@@ -372,7 +374,7 @@ void array_partition_pivot_is_highest() {
         ss_assert(array->data[i] > 9);
     }
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void get_reference_to_element() {
@@ -390,7 +392,7 @@ void get_reference_to_element() {
     elem = ss_array_int_get(array, 4);
     ss_assert(elem == NULL);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void get_array_length() {
@@ -402,7 +404,7 @@ void get_array_length() {
 
     ss_assert(ss_array_int_len(array) == 4);
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
 }
 
 void check_whether_array_is_empty() {
@@ -414,7 +416,31 @@ void check_whether_array_is_empty() {
 
     ss_assert(! ss_array_int_is_empty(array));
 
-    ss_array_int_free(&array);
+    ss_array_int_free(&array, NULL);
+}
+
+void free_struct_s2(S2** s) {
+    free((*s)->buf);
+    (*s)->buf = NULL;
+    // We don't free(*s) because it's stack-allocated.
+}
+
+void call_free_function_on_elements() {
+    S2 *a = (S2*) malloc(sizeof(S2));
+    S2 *b = (S2*) malloc(sizeof(S2));
+
+    a->buf = (int*) malloc(sizeof(int) * 8);
+    memset(a->buf, 1, 8);
+    b->buf = (int*) malloc(sizeof(int) * 8);
+    memset(b->buf, 2, 8);
+
+    struct ss_array_s2 *array = ss_array_s2_create_from(a, 1);
+    ss_array_s2_append_data(array, b, 1);
+    free(a);
+    free(b);
+
+    ss_array_s2_free(&array, &free_struct_s2);
+    ss_assert(array == NULL);
 }
 
 #endif

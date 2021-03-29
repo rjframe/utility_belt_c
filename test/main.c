@@ -41,6 +41,7 @@ static void ss_array_tests() {
     run(get_reference_to_element);
     run(get_array_length);
     run(check_whether_array_is_empty);
+    run(call_free_function_on_elements);
 }
 
 static void ss_string_tests() {

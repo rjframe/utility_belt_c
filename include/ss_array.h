@@ -42,8 +42,11 @@ struct ss_array_##LBL;                                                      \
  */                                                                         \
 struct ss_array_##LBL *ss_array_##LBL##_create();                           \
                                                                             \
-/* Free the provided array and set its pointer to NULL. */                  \
-void ss_array_##LBL##_free(struct ss_array_##LBL **array);                  \
+/* Free the provided array and set its pointer to NULL.                        \
+ *                                                                             \
+ * Calls a free function on each element of the array if one is provided.      \
+ */                                                                            \
+void ss_array_##LBL##_free(struct ss_array_##LBL **array, void (*f)(T** elem));\
                                                                             \
 /* Create a new array with the specified capacity.                          \
  * If `num_elems` is 0, behaves like [ss_array_##LBL##_create].             \
@@ -156,8 +159,17 @@ struct ss_array_##LBL *ss_array_##LBL##_create() {                             \
     return array;                                                              \
 }                                                                              \
                                                                                \
-void ss_array_##LBL##_free(struct ss_array_##LBL **array) {                    \
+void ss_array_##LBL##_free(struct ss_array_##LBL **array, void (*f)(T** elem)) \
+{                                                                              \
     if (array == NULL || *array == NULL) return;                               \
+                                                                               \
+    if (f != NULL) {                                                           \
+        for (size_t i = 0; i < (*array)->len; ++i) {                           \
+            T *tmp = &(*array)->data[i];                                       \
+            f(&tmp);                                                           \
+        }                                                                      \
+    }                                                                          \
+                                                                               \
     free((*array)->data);                                                      \
     (*array)->data = NULL;                                                     \
     free(*array);                                                              \
@@ -186,7 +198,7 @@ struct ss_array_##LBL *ss_array_##LBL##_create_from(T *data, size_t len) {     \
     size_t len_bytes = len * sizeof(T);                                        \
     T *buf = malloc(len_bytes);                                                \
     if (buf == NULL) {                                                         \
-        ss_array_##LBL##_free(&array);                                         \
+        ss_array_##LBL##_free(&array, NULL);                                   \
         return NULL;                                                           \
     }                                                                          \
                                                                                \
