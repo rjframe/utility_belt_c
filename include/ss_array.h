@@ -15,6 +15,7 @@
  * Requres: ss_math.h
  */
 
+#include <stdbool.h>
 #include <string.h>
 
 #include "ss_math.h"
